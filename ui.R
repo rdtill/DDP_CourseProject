@@ -8,7 +8,6 @@
 #
 
 library(shiny)
-setwd('C:\\Users\\User\\Desktop\\Coursera\\Data Science Specialization\\Developing Data Products\\Course_Project\\Course_Project')
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
