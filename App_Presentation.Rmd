@@ -1,0 +1,63 @@
+---
+title: "Developing Data Products: Course Project"
+author: "Ryan Till"
+date: "November 11, 2018"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Temperature Prediction
+
+This app uses the airquality dataset from the datasets package in R to fit a regression model and predict the temperature (F) using predictors chosen by you. Note that this data set measures daily air quality in New York from May to September of 1973.
+
+## Input
+
+The predictors available for you to choose from are listed below.
+
+- Ozone: mean ozone in parts per billion
+- Solar.R: solar Radiation in Langleys
+- Wind: average wind speed in miles per hour
+- Month: the number of the month from May (5) to September (9)
+
+Once selected, you'll be able to choose specific values for the active predictors and generate your own temperature prediciton.
+
+## Output
+
+When a predictor is selected, the app will generate a plot with the predicted temperature on the x-axis, the actual temperature on the y-axis and a line to help illustrate model fit. As other predictors are added or removed, this plot will be regenerated to either include or exclude them.  
+
+Below the plot, the average error and your predicted temperature will be calculated.
+
+## Example of Use
+
+So, let's say for example that you've chosen to include Ozone and the Month as your predictors. In that case your plot would look like the one below.
+
+```{r, plot example, fig.height=4, fig.width=5, fig.align='center'}
+data('airquality')
+my_data = airquality[complete.cases(airquality),]
+
+fit = lm(Temp ~ Ozone + factor(Month), data = my_data)
+avg_err = sqrt(sum(resid(fit)^2) / length(resid(fit)))
+plot(predict(fit), my_data$Temp, 
+     pch = 16, xlab = 'Predicted Temp', ylab = 'Actual Temp', 
+     main = 'Predicted vs Actual Values')
+abline(lm(my_data$Temp ~ predict(fit)))
+
+
+vals = c(25, 6)
+        
+pred_df = data.frame(Ozone   = vals[1], 
+                     Solar.R = 0,
+                     Wind    = 0,
+                     Temp    = 0,
+                     Month   = vals[2],
+                     Day     = 0)
+        
+pred_val   = round(predict(object = fit, newdata = pred_df))
+pred_value = paste("Predicted Value: ", pred_val, sep = "")
+```
+
+Your average error would display as `r round(avg_err, 2)` and if you then set your values of Ozone and Month to 25 and 6 respectively, your predicted value would be calculated as `r pred_val`.
+
